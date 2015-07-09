@@ -72,7 +72,7 @@ public class ConvertToCSV{
             FileWriter fw = new FileWriter(new File("target/classes/logHttp.csv"));
             BufferedWriter bw = new BufferedWriter(fw);
             ConvertToCSV ctcsv = new ConvertToCSV();
-            ctcsv.lireFichier(bw, "loghttp.txt");
+            ctcsv.lireFichier(bw, "logExample.txt");
             bw.flush();
             bw.close();
             fw.close();

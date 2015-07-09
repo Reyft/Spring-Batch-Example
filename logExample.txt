@@ -1,0 +1,3 @@
+www.optionway.com 127.0.0.1 - - [24/May/1993:15:03:42 +0000] "GET /example/of/url" 200 1000 "-" "link/to/a/type/of/resource"
+api.optionway.com 127.0.0.1 - - [24/May/1993:21:47:23 +0000] "PUT /example/of/url/to/create/a/data" 204 -
+www.optionway.com 127.0.0.1 - - [24/May/1993:16:10:38 +0000] "GET /another/example/of/url" 500 1000 "-" "another/link/to/a/resource"

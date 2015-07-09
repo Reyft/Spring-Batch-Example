@@ -75,7 +75,7 @@ public class ConvertApiToCSV {
             FileWriter fw = new FileWriter(new File("target/classes/apiHttp.csv"));
             BufferedWriter output = new BufferedWriter(fw);
             ConvertApiToCSV api = new ConvertApiToCSV();
-            api.lireFichier("loghttp.txt", output);
+            api.lireFichier("logExample.txt", output);
             output.flush();
             output.close();
             fw.close();
