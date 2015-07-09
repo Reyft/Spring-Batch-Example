@@ -2,6 +2,7 @@ package batchHttp;
 
 import batchHttp.reader.ConvertApiToCSV;
 import batchHttp.reader.ConvertToCSV;
+import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.JobParametersBuilder;
@@ -27,6 +28,15 @@ public class BatchLogHttp {
         JobLauncher jobLauncher = (JobLauncher) cpt.getBean("jobLauncher");
         Job job = (Job) cpt.getBean("jobHttp");
         JobParameters parameter = new JobParametersBuilder().addDate("date", new Date()).toJobParameters();
-        jobLauncher.run(job, parameter);
+        if(jobLauncher.run(job, parameter).getExitStatus().equals(ExitStatus.COMPLETED)){
+            System.out.println("\n******************************************\n"+
+                    "***         RDF File Generated         ***\n"+
+                    "******************************************");
+        } else {
+            System.out.println("" +
+                    "******************************************\n"+
+                    "***        Error During Process        ***\n"+
+                    "******************************************");
+        }
     }
 }
