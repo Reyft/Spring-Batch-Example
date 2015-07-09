@@ -3,3 +3,10 @@
 
 #Maven
 target/
+
+#Private
+**/*.txt
+**/*.rdf
+src/main/java/LireEspace.java
+src/main/java/EcrireLigne.java
+src/main/java/TestMain.java
