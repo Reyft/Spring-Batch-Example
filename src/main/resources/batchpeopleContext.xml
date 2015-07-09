@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ************************* Fichier de Gestion des Jobs pour Spring Batch ********************************* -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+			http://www.springframework.org/schema/beans
+			http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+			http://www.springframework.org/schema/batch
+			http://www.springframework.org/schema/batch/spring-batch-3.0.xsd">
+
+
+
+                       <!-- ********************* Bean Reader ********************* -->
+    <bean id="personneReaderCSV" class="org.springframework.batch.item.file.FlatFileItemReader" >
+        <property name="resource" value="Person.csv" />
+        <property name="lineMapper">
+            <bean class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
+                <property name="lineTokenizer">
+                    <bean class="org.springframework.batch.item.file.transform.DelimitedLineTokenizer">
+                        <property name="delimiter" value=","/>
+                        <property name="names" value="id,nom,prenom,civilite" />
+                    </bean>
+                </property>
+                <property name="fieldSetMapper">
+                    <bean class="org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper">
+                        <property name="targetType" value="batchTest.core.Personne" />
+                    </bean>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+
+
+                        <!-- ********************* Bean Process ********************* -->
+    <bean id="JobPerson1" class="batchTest.process.JobPerson1" />
+    <bean id="JobPerson2" class="batchTest.process.JobPerson2" />
+
+
+
+                        <!-- ********************* Beans Writer ********************* -->
+    <bean id="personWriter1" class="batchTest.writer.PersonWriter1" />
+    <bean id="personWriter2" class="batchTest.writer.PersonWriter2" />
+
+    <bean id="monsieurJDBCWriter" class="batchTest.writer.PersonJdbcWriter1" >
+        <property name="jdbcTemplate" ref="idJdbcTemplate" />
+    </bean>
+
+    <bean id="madameJDBCWriter" class="batchTest.writer.PersonJdbcWriter2" >
+        <property name="jdbcTemplate" ref="idJdbcTemplate" />
+    </bean>
+
+
+
+                  <!-- ********************* Beans de Configuration ********************* -->
+    <bean id="idJdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+        <property name="DataSource" ref="dataSource" />
+    </bean>
+
+    <bean id="transactionManager"
+          class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://localhost/getstarted"/>
+        <property name="username" value="root"/>
+        <property name="password" value="rockailles"/>
+    </bean>
+
+    
+
+                      <!-- ********************* Bean de Test ********************* -->
+    <bean id="jobLauncherTestUtils" class="org.springframework.batch.test.JobLauncherTestUtils" >
+        <property name="job" ref="importPersonnes" />
+        <property name="jobRepository" ref="jobRepository"/>
+        <property name="jobLauncher" ref="jobLauncher"/>
+    </bean>
+
+
+
+                    <!-- ********************* Lancement du Job ********************* -->
+    <bean id="jobLauncher"
+          class="org.springframework.batch.core.launch.support.SimpleJobLauncher">
+        <property name="jobRepository" ref="jobRepository" />
+    </bean>
+
+    <bean id="jobRepository"
+          class="org.springframework.batch.core.repository.support.MapJobRepositoryFactoryBean" />
+
+    <!-- *********** Job Principal *********** -->
+    <job id="importPersonnes" xmlns="http://www.springframework.org/schema/batch">
+        <step id="readWriteM" next="readWriteMme">
+            <tasklet>
+                <chunk reader="personneReaderCSV" writer="personWriter1" processor="JobPerson1" commit-interval="2" />
+            </tasklet>
+        </step>
+        <step id="readWriteMme">
+            <tasklet>
+                <chunk reader="personneReaderCSV" writer="personWriter2" processor="JobPerson2" commit-interval="2" />
+            </tasklet>
+        </step>
+    </job>
+</beans>

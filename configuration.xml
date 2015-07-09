@@ -1,0 +1,38 @@
+<plugin>
+    <groupId>org.codehaus.mojo</groupId>
+    <artifactId>exec-maven-plugin</artifactId>
+    <version>1.4.0</version>          
+    <executions>
+        <execution>
+            <id>Generate First File</id>
+            <goals>
+                <goal>java</goal>
+            </goals>
+            <configuration>
+                <mainClass>
+                    batchHttp.reader.ConvertApiToCSV
+                </mainClass>
+            </configuration>
+        </execution>
+        <execution>
+            <id>Generate Second File</id>
+            <goals>
+                <goal>java</goal>
+            </goals>
+            <mainClass>
+            batchHttp.reader.ConvertToCSV
+        </mainClass>
+        </execution>
+        <execution>
+            <id>Generate RDF File</id>
+            <goals>
+                <goal>java</goal>
+            </goals>
+            <configuration>
+                <mainClass>
+                    batchHttp.BatchLogHttp
+                </mainClass>
+            </configuration>
+        </execution>
+    </executions>
+</plugin>
